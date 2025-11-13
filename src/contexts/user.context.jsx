@@ -6,8 +6,7 @@ import {
 import { 
     onAuthStateChangeListener,
     createUserDocumentFromAuth,
- } from "../utils/firebase/firebase.utils";
-import {  } from "../utils/firebase/firebase.utils";
+} from "../utils/firebase/firebase.utils";
 import { createAction } from "../utils/reducer/reducer.utils";
 // as the actual value you want access
 export const UserContext = createContext({
