@@ -1,16 +1,23 @@
-import { useContext } from "react"
-import { UserCartContext } from "../../contexts/userCart.context"
 import './checkOutlist.styles.scss'
-
+import { 
+    useSelector,
+    useDispatch,
+} from "react-redux";
+import { 
+    selectUserSelectedProducts,
+    selectTotalPrice,
+} from "../../store/userCart/userCart.selectors";
+import { 
+    addItemToCart ,
+    removeItemFromCart,
+    decreaseQuantityByOne,
+    clearAllItems,
+} from "../../store/userCart/userCart.actions";
 export default function CheckOutList() {
-    const {
-        userSelectedProducts, 
-        totalPrice,
-        removeItemFromCart,
-        decreaseQuantityByOne,
-        addItemToCart,
-        clearAllItems,
-    } = useContext(UserCartContext);
+
+    const userSelectedProducts = useSelector(selectUserSelectedProducts);
+    const totalPrice = useSelector(selectTotalPrice);
+    const dispatch = useDispatch();
 
     return (
         <table>
@@ -35,13 +42,13 @@ export default function CheckOutList() {
                             </td>
                             <td>{product.name}</td>
                             <td>
-                                <button onClick={() => decreaseQuantityByOne(product)}>{'<'}</button>
+                                <button onClick={() => dispatch(decreaseQuantityByOne(userSelectedProducts, product))}>{'<'}</button>
                                 {product.quantity}
-                                <button onClick={() => addItemToCart(product)}>{'>'}</button>
+                                <button onClick={() => dispatch(addItemToCart(userSelectedProducts, product))}>{'>'}</button>
                             </td>
                             <td>{product.price}</td>
                             <td>
-                                <button onClick={() => removeItemFromCart(product)}>X</button>
+                                <button onClick={() => dispatch(removeItemFromCart(userSelectedProducts, product))}>X</button>
                             </td>
                         </tr>
                     ))
@@ -55,7 +62,7 @@ export default function CheckOutList() {
                         <div className="footer-actions">
                             <button 
                                 className="clear-btn"
-                                onClick={() => clearAllItems()}
+                                onClick={() => dispatch(clearAllItems())}
                             >Clear Cart</button>
                             <span className="total">TOTAL: ${totalPrice}</span>
                         </div>

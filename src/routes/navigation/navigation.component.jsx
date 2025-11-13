@@ -1,4 +1,4 @@
-import { Fragment, useContext } from "react"
+import { Fragment } from "react"
 import {  Outlet } from "react-router"
 
 import CartIcon from "../../components/cart-icon/cart-icon.component"
@@ -8,19 +8,21 @@ import CrownLogo from '../../assets/crown.svg'
 import { signOutAuthUser } from "../../utils/firebase/firebase.utils"
 import { useEffect } from "react"
 import { useRef } from "react"
-import { UserCartContext } from "../../contexts/userCart.context"
 import {NavigationContainer, LogoContainer,NavLinksContainer, NavLinks} from'./navigation.styles'
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import { selectCurrentUser } from "../../store/user/user.selectors"
+import { setIsCartOpen } from "../../store/userCart/userCart.actions"
+import { selectIsCartOpen } from "../../store/userCart/userCart.selectors"
 
 const Navigation = () => {
   const currentUser = useSelector(selectCurrentUser)
-  const {isCartOpen, setIsCartOpen} = useContext(UserCartContext);
+  const isCartOpen = useSelector(selectIsCartOpen);
   const cartRef = useRef(null);
+  const dispatch = useDispatch();
 
   useEffect(()=>{
     const handleClickOutsideDropDownBox = (e) =>{
-      if(cartRef.current && !cartRef.current.contains(e.target)) setIsCartOpen(false);
+      if(cartRef.current && !cartRef.current.contains(e.target)) dispatch(setIsCartOpen(false));
     }
 
     document.addEventListener('mousedown', handleClickOutsideDropDownBox);
@@ -45,7 +47,7 @@ const Navigation = () => {
               <NavLinks to="/auth">SIGN IN</NavLinks>
               )
             }
-            <CartIcon onClick = {() => setIsCartOpen(prev => !prev)}/>
+            <CartIcon onClick = {() => (dispatch(setIsCartOpen(!isCartOpen)))}/>
         </NavLinksContainer>
         {isCartOpen && <CartDropDown ref = {cartRef}/>}
     </NavigationContainer>

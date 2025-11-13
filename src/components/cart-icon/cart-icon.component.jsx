@@ -1,14 +1,15 @@
 import ShoppingIcon from '../../assets/shopping-bag.svg'
-import { useContext } from 'react'
-import { UserCartContext } from '../../contexts/userCart.context'
 import {
   CartIconContainer,
   ShoppingImage,
   ItemCount,
 } from './cart-icon.styles'
+import { useSelector } from 'react-redux'
+import { selectTotalItems } from '../../store/userCart/userCart.selectors'
+
 
 export default function CartIcon({...otherProps}) {
-  const {totalItems} = useContext(UserCartContext);
+  const totalItems = useSelector(selectTotalItems);
   return (
     <CartIconContainer
       {...otherProps}

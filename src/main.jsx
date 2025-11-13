@@ -13,9 +13,7 @@ createRoot(document.getElementById('root')).render(
   // <StrictMode>
   <BrowserRouter>
   <Provider store={store}>
-      <UserCartProvider>
         <App />
-      </UserCartProvider>
   </Provider>
   </BrowserRouter>
   // </StrictMode>,

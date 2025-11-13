@@ -1,6 +1,4 @@
 import Button from '../button/button.component'
-import { useContext } from 'react'
-import { UserCartContext } from '../../contexts/userCart.context'
 import { useNavigate } from 'react-router'
 import {
   CartDropdownContainer,
@@ -10,14 +8,19 @@ import {
   Price,
   EmptyMessage,
 } from './cart-dropdown.styles';
+import { selectUserSelectedProducts } from '../../store/userCart/userCart.selectors';
+import { setIsCartOpen } from '../../store/userCart/userCart.actions';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function CartDropDown({...otherProps}) {
-  const { userSelectedProducts } = useContext(UserCartContext);
-  const { setIsCartOpen } = useContext(UserCartContext);
+
+  const dispatch = useDispatch();
+  const userSelectedProducts = useSelector(selectUserSelectedProducts);
+
   const navigate = useNavigate()
   const goToCheckOutHandler = () => {
     navigate('/checkout');
-    setIsCartOpen(false);
+    dispatch(setIsCartOpen(false));
   }
   
   return (
