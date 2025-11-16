@@ -5,6 +5,8 @@ import { customeLogger } from '../middleware/logger.redux'
 import { persistStore, persistReducer } from 'redux-persist'
 import {thunk} from 'redux-thunk'
 import storage from 'redux-persist/lib/storage';
+import createSagaMiddleware  from 'redux-saga';
+import { rootSaga } from './root-saga';
 
 const persistConfig = {
     key: 'root',
@@ -13,8 +15,10 @@ const persistConfig = {
     blacklist: ['user'] // user will not be persisted
 }
 
+const sagaMiddleware = createSagaMiddleware()
+
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-const middlewares = [thunk];
+const middlewares = [sagaMiddleware];
 if (process.env.NODE_ENV !== 'production') {
   middlewares.push(customeLogger);
 }
@@ -23,4 +27,6 @@ const composeEnhancer = (process.env.NODE_ENV !== 'production' && window && wind
 
 const composeEnhancers = composeEnhancer(middleWareEnhancer);
 export const store = createStore(persistedReducer, undefined ,composeEnhancers);
+
+sagaMiddleware.run(rootSaga);
 export const persistor = persistStore(store);
