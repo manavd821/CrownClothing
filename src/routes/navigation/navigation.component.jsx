@@ -13,13 +13,16 @@ import { useSelector, useDispatch } from "react-redux"
 import { selectCurrentUser } from "../../store/user/user.selectors"
 import { setIsCartOpen } from "../../store/userCart/userCart.actions"
 import { selectIsCartOpen } from "../../store/userCart/userCart.selectors"
-
+import { signOutStart } from "../../store/user/user.actions";
 const Navigation = () => {
   const currentUser = useSelector(selectCurrentUser)
   const isCartOpen = useSelector(selectIsCartOpen);
   const cartRef = useRef(null);
   const dispatch = useDispatch();
 
+  const signOutBtnHandler = () => {
+      dispatch(signOutStart());
+  }
   useEffect(()=>{
     const handleClickOutsideDropDownBox = (e) =>{
       if(cartRef.current && !cartRef.current.contains(e.target)) dispatch(setIsCartOpen(false));
@@ -42,7 +45,7 @@ const Navigation = () => {
             <NavLinks to="/shop">SHOP</NavLinks> 
             {
               currentUser ? (
-                <NavLinks as='span' className="nav-link" onClick={signOutAuthUser}>SIGN OUT</NavLinks>
+                <NavLinks as='span' className="nav-link" onClick={signOutBtnHandler}>SIGN OUT</NavLinks>
               ) : (
               <NavLinks to="/auth">SIGN IN</NavLinks>
               )

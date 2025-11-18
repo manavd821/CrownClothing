@@ -15,11 +15,15 @@ const defaultFormField = {
     password : '',
     confirmPassword : ''
 } 
+import { useDispatch } from "react-redux";
+import { signUpStart } from "../../store/user/user.actions";
 
 
 const SignUpForm = () => {
     const [formField, setFormField] = useState(defaultFormField);
     const { displayName, email, password, confirmPassword } = formField;
+
+    const dispatch = useDispatch();
 
     const resetFormField = () => {
     setFormField(defaultFormField)
@@ -32,17 +36,8 @@ const SignUpForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (e.target.password.value == e.target.confirmPassword.value){
-            try{
-                const { user } = await createAuthUserWithEmailAndPassword(e.target.email.value, e.target.password.value)
-
-                await createUserDocumentFromAuth(user, { displayName });
-                resetFormField();
-            }catch(e){
-                if(e.code == 'auth/email-already-in-use'){
-                    alert("can't create user, email already in use")
-                }
-                console.log("Error in creating a user in fireabse: ",e)
-            }
+            dispatch(signUpStart(email, password, displayName));
+            resetFormField();
         }
         else
             console.log("Password not matched")

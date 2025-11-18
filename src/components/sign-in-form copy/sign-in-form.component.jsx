@@ -10,7 +10,8 @@ import {
     SignUpContainer,
     ButtonContainer,
 } from './sign-in.styles'
-
+import { useDispatch } from "react-redux";
+import { googleSignInStart, emailSignInStart } from "../../store/user/user.actions";
 const defaultFormField = {
     email : '',
     password : '',
@@ -20,7 +21,7 @@ const defaultFormField = {
 const SignInForm = ({ logGoogleUser }) => {
     const [formField, setFormField] = useState(defaultFormField);
     const {  email, password } = formField;
-
+    const dispatch = useDispatch();
 
     const resetFormField = () => {
     setFormField(defaultFormField)
@@ -31,21 +32,17 @@ const SignInForm = ({ logGoogleUser }) => {
         setFormField({...formField, [name]:value})
     };
 
-    const signInWithGoogle = async () => {
-        await signInWithGooglePopup();
+    const signInWithGoogle = () => {
+        dispatch(googleSignInStart());
     }
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-            try{
-                const { user } = await signInAuthUserWithEmailAndPassword(email, password)
-                resetFormField();
-                
-            }catch(error){
-                if(error.code == 'auth/invalid-credential'){
-                        alert("invalid-credential")
-                }
-                console.log("Error : ",error)
-            }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        try {
+            dispatch(emailSignInStart(email, password));
+            resetFormField();
+        } catch (error) {
+            console.log("User Sign in Failed: ", error);
+        }
     }
     
 
